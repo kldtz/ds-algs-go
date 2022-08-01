@@ -1,93 +1,98 @@
 package ds
 
 type Node[T any] struct {
-	Value T
-	Next  *Node[T]
+	value T
+	next  *Node[T]
 }
 
 type List[T any] struct {
-	Head, Tail *Node[T]
-	Len        uint
+	head, tail *Node[T]
+	len        uint
 }
 
 func NewList[T any]() *List[T] {
 	return &List[T]{}
 }
 
+func (list *List[T]) Len() uint {
+	return list.len
+}
+
 func (list *List[T]) ToSlice() []T {
-	slice := make([]T, list.Len)
-	for cur, i := list.Head, 0; cur != nil; cur, i = cur.Next, i+1 {
-		slice[i] = cur.Value
+	slice := make([]T, list.len)
+	for cur, i := list.head, 0; cur != nil; cur, i = cur.next, i+1 {
+		slice[i] = cur.value
 	}
 	return slice
 }
 
 func (list *List[T]) Append(v T) {
-	node := &Node[T]{Value: v}
-	if list.Head == nil {
-		list.Head = node
-		list.Tail = node
+	node := &Node[T]{value: v}
+	if list.head == nil {
+		list.head = node
+		list.tail = node
 	} else {
-		list.Tail.Next = node
-		list.Tail = node
+		list.tail.next = node
+		list.tail = node
 	}
-	list.Len += 1
+	list.len += 1
 }
 
 func (list *List[T]) Prepend(v T) {
-	node := &Node[T]{Value: v}
-	if list.Tail == nil {
-		list.Head = node
-		list.Tail = node
+	node := &Node[T]{value: v}
+	if list.tail == nil {
+		list.head = node
+		list.tail = node
 	} else {
-		node.Next = list.Head
-		list.Head = node
+		node.next = list.head
+		list.head = node
 	}
-	list.Len += 1
+	list.len += 1
 }
 
-func FindFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
-	if list.Head == nil {
+func findFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
+	if list.head == nil {
 		return nil, false
 	}
-	for cur := list.Head; cur != nil; cur = cur.Next {
-		if cur.Value == v {
+	for cur := list.head; cur != nil; cur = cur.next {
+		if cur.value == v {
 			return cur, true
 		}
 	}
 	return nil, false
 }
 
-func (list *List[T]) RemoveFirst() (*Node[T], bool) {
-	if list.Head == nil {
-		return nil, false
+func (list *List[T]) RemoveFirst() (T, bool) {
+	if list.head == nil {
+		var zero T
+		return zero, false
 	}
 
-	removed := list.Head
-	list.Head = list.Head.Next
-	if list.Head == nil {
-		list.Tail = nil
+	removed := list.head.value
+	list.head = list.head.next
+	if list.head == nil {
+		list.tail = nil
 	}
-	list.Len -= 1
+	list.len -= 1
 	return removed, true
 }
 
 func (list *List[T]) Delete(n *Node[T]) bool {
-	if list.Head == nil {
+	if list.head == nil {
 		return false
 	}
 
-	if list.Head == n {
-		list.Head = list.Head.Next
-		list.Len -= 1
+	if list.head == n {
+		list.head = list.head.next
+		list.len -= 1
 		return true
 	}
 
-	prev := list.Head
-	for cur := prev.Next; cur != nil; prev, cur = cur, cur.Next {
+	prev := list.head
+	for cur := prev.next; cur != nil; prev, cur = cur, cur.next {
 		if cur == n {
-			prev.Next = cur.Next
-			list.Len -= 1
+			prev.next = cur.next
+			list.len -= 1
 			return true
 		}
 	}
@@ -95,7 +100,7 @@ func (list *List[T]) Delete(n *Node[T]) bool {
 }
 
 func (list *List[T]) Iterator() ListIterator[T] {
-	return ListIterator[T]{cur: list.Head}
+	return ListIterator[T]{cur: list.head}
 }
 
 type ListIterator[T any] struct {
@@ -103,11 +108,11 @@ type ListIterator[T any] struct {
 }
 
 func (it *ListIterator[T]) HasNext() bool {
-	return it.cur.Next != nil
+	return it.cur.next != nil
 }
 
 func (it *ListIterator[T]) Next() T {
-	curValue := it.cur.Value
-	it.cur = it.cur.Next
-	return curValue
+	curvalue := it.cur.value
+	it.cur = it.cur.next
+	return curvalue
 }
