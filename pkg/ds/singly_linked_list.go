@@ -1,16 +1,16 @@
 package ds
 
-type Node[T comparable] struct {
+type Node[T any] struct {
 	Value T
 	Next  *Node[T]
 }
 
-type List[T comparable] struct {
+type List[T any] struct {
 	Head, Tail *Node[T]
 	Len        uint
 }
 
-func NewList[T comparable]() *List[T] {
+func NewList[T any]() *List[T] {
 	return &List[T]{}
 }
 
@@ -46,7 +46,7 @@ func (list *List[T]) Prepend(v T) {
 	list.Len += 1
 }
 
-func (list *List[T]) FindFirst(v T) (*Node[T], bool) {
+func FindFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
 	if list.Head == nil {
 		return nil, false
 	}
@@ -72,34 +72,33 @@ func (list *List[T]) RemoveFirst() (*Node[T], bool) {
 	return removed, true
 }
 
-func (list *List[T]) RemoveFirstMatching(v T) (*Node[T], bool) {
+func (list *List[T]) Delete(n *Node[T]) bool {
 	if list.Head == nil {
-		return nil, false
+		return false
 	}
 
-	if list.Head.Value == v {
-		deleted := list.Head
+	if list.Head == n {
 		list.Head = list.Head.Next
 		list.Len -= 1
-		return deleted, true
+		return true
 	}
 
 	prev := list.Head
 	for cur := prev.Next; cur != nil; prev, cur = cur, cur.Next {
-		if cur.Value == v {
+		if cur == n {
 			prev.Next = cur.Next
 			list.Len -= 1
-			return cur, true
+			return true
 		}
 	}
-	return nil, false
+	return false
 }
 
 func (list *List[T]) Iterator() ListIterator[T] {
 	return ListIterator[T]{cur: list.Head}
 }
 
-type ListIterator[T comparable] struct {
+type ListIterator[T any] struct {
 	cur *Node[T]
 }
 
