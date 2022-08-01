@@ -30,8 +30,8 @@ func TestFindFirst(t *testing.T) {
 	list.Append(2)
 	list.Append(1)
 
-	node, err := list.FindFirst(2)
-	assert.Nil(t, err)
+	node, succ := list.FindFirst(2)
+	assert.True(t, succ)
 	assert.Equal(t, 2, node.Value)
 	assert.Equal(t, 1, node.Next.Value)
 }
@@ -42,9 +42,9 @@ func TestFindFirstUnknown(t *testing.T) {
 	list.Append(2)
 	list.Append(1)
 
-	node, err := list.FindFirst(4)
+	node, succ := list.FindFirst(4)
 	assert.Nil(t, node)
-	assert.NotNil(t, err)
+	assert.False(t, succ)
 }
 
 func TestRemoveFirst(t *testing.T) {
@@ -53,7 +53,9 @@ func TestRemoveFirst(t *testing.T) {
 	list.Append(1)
 	list.Append(2)
 
-	list.RemoveFirst()
+	node, succ := list.RemoveFirst()
+	assert.Equal(t, true, succ)
+	assert.Equal(t, 3, node.Value)
 	assert.Equal(t, uint(2), list.Len)
 	assert.Equal(t, []int{1, 2}, list.ToSlice())
 }
@@ -66,8 +68,8 @@ func TestRemoveFirstMatching(t *testing.T) {
 	list.Append(2)
 
 	assert.Equal(t, uint(4), list.Len)
-	node, err := list.RemoveFirstMatching(2)
-	assert.Nil(t, err)
+	node, succ := list.RemoveFirstMatching(2)
+	assert.True(t, succ)
 	assert.Equal(t, uint(3), list.Len)
 	assert.Equal(t, 2, node.Value)
 	assert.Equal(t, []int{3, 1, 2}, list.ToSlice())

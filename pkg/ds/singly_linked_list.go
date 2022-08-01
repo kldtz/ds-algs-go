@@ -1,9 +1,5 @@
 package ds
 
-import (
-	"errors"
-)
-
 type Node[T comparable] struct {
 	Value T
 	Next  *Node[T]
@@ -50,21 +46,21 @@ func (list *List[T]) Prepend(v T) {
 	list.Len += 1
 }
 
-func (list *List[T]) FindFirst(v T) (*Node[T], error) {
+func (list *List[T]) FindFirst(v T) (*Node[T], bool) {
 	if list.Head == nil {
-		return nil, errors.New("List is empty")
+		return nil, false
 	}
 	for cur := list.Head; cur != nil; cur = cur.Next {
 		if cur.Value == v {
-			return cur, nil
+			return cur, true
 		}
 	}
-	return nil, errors.New("Could not find value in list")
+	return nil, false
 }
 
-func (list *List[T]) RemoveFirst() (*Node[T], error) {
+func (list *List[T]) RemoveFirst() (*Node[T], bool) {
 	if list.Head == nil {
-		return nil, errors.New("List is empty")
+		return nil, false
 	}
 
 	removed := list.Head
@@ -73,19 +69,19 @@ func (list *List[T]) RemoveFirst() (*Node[T], error) {
 		list.Tail = nil
 	}
 	list.Len -= 1
-	return removed, nil
+	return removed, true
 }
 
-func (list *List[T]) RemoveFirstMatching(v T) (*Node[T], error) {
+func (list *List[T]) RemoveFirstMatching(v T) (*Node[T], bool) {
 	if list.Head == nil {
-		return nil, errors.New("List is empty")
+		return nil, false
 	}
 
 	if list.Head.Value == v {
 		deleted := list.Head
 		list.Head = list.Head.Next
 		list.Len -= 1
-		return deleted, nil
+		return deleted, true
 	}
 
 	prev := list.Head
@@ -93,10 +89,10 @@ func (list *List[T]) RemoveFirstMatching(v T) (*Node[T], error) {
 		if cur.Value == v {
 			prev.Next = cur.Next
 			list.Len -= 1
-			return cur, nil
+			return cur, true
 		}
 	}
-	return nil, errors.New("Could not find node in list")
+	return nil, false
 }
 
 func (list *List[T]) Iterator() ListIterator[T] {
