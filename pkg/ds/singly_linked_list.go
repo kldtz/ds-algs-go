@@ -7,14 +7,14 @@ type Node[T any] struct {
 
 type List[T any] struct {
 	head, tail *Node[T]
-	len        uint
+	len        int
 }
 
 func NewList[T any]() *List[T] {
 	return &List[T]{}
 }
 
-func (list *List[T]) Len() uint {
+func (list *List[T]) Len() int {
 	return list.len
 }
 

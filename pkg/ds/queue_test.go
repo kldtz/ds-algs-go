@@ -16,5 +16,5 @@ func TestEnqueue(t *testing.T) {
 		assert.Equal(t, i, val)
 	}
 
-	assert.Equal(t, uint(0), queue.Len())
+	assert.Equal(t, 0, queue.Len())
 }
