@@ -6,3 +6,4 @@ Teaching myself some Go.
 
 * [Singly linked list](pkg/ds/singly_linked_list.go): singly linked list with head and tail pointers
   * [Stack](pkg/ds/stack.go)
+  * [Queue](pkg/ds/queue.go)
