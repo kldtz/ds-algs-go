@@ -1,6 +1,6 @@
 # Data structures and algorithms in Go
 
-Teaching myself some Go.
+Teaching myself some Go while refreshing data structures and algorithms.
 
 ## Data Structures
 
