@@ -8,34 +8,34 @@ func djb2_hash(s string) int {
 	return hash
 }
 
-type HashTableEntry[T any] struct {
-	key   string
+type HashTableEntry[K comparable, T any] struct {
+	key   K
 	value T
 }
 
-type HashTable[T any] struct {
+type HashTable[K comparable, T any] struct {
 	size         int
 	loadFactor   float64
-	hashFunction func(s string) int
-	xs           []*HashTableEntry[T]
+	hashFunction func(s K) int
+	xs           []*HashTableEntry[K, T]
 }
 
-func NewHashTable[T any]() *HashTable[T] {
-	return &HashTable[T]{
+func NewHashTable[T any]() *HashTable[string, T] {
+	return &HashTable[string, T]{
 		size:         0,
 		loadFactor:   0.75,
 		hashFunction: djb2_hash,
-		xs:           make([]*HashTableEntry[T], 16),
+		xs:           make([]*HashTableEntry[string, T], 16),
 	}
 }
 
-func (table *HashTable[T]) Size() int {
+func (table *HashTable[K, T]) Size() int {
 	return table.size
 }
 
-func (table *HashTable[T]) rehash() {
+func (table *HashTable[K, T]) rehash() {
 	xs := table.xs
-	table.xs = make([]*HashTableEntry[T], 2*cap(xs))
+	table.xs = make([]*HashTableEntry[K, T], 2*cap(xs))
 	for _, x := range xs {
 		if x != nil {
 			table.set(x.key, x.value)
@@ -44,17 +44,17 @@ func (table *HashTable[T]) rehash() {
 }
 
 // This function assumes that cap(table.xs) > table.size, otherwise it goes into an infinite loop!
-func (table *HashTable[T]) set(key string, value T) {
+func (table *HashTable[K, T]) set(key K, value T) {
 	index := table.hashFunction(key) % cap(table.xs)
 	for i := index; ; i = (i + 1) % cap(table.xs) {
 		if table.xs[i] == nil || table.xs[i].key == key {
-			table.xs[i] = &HashTableEntry[T]{key: key, value: value}
+			table.xs[i] = &HashTableEntry[K, T]{key: key, value: value}
 			break
 		}
 	}
 }
 
-func (table *HashTable[T]) Set(key string, value T) {
+func (table *HashTable[K, T]) Set(key K, value T) {
 	if float64(table.size)/float64(cap(table.xs)) > table.loadFactor {
 		table.rehash()
 	}
@@ -62,7 +62,7 @@ func (table *HashTable[T]) Set(key string, value T) {
 	table.size += 1
 }
 
-func (table *HashTable[T]) Get(key string) (T, bool) {
+func (table *HashTable[K, T]) Get(key K) (T, bool) {
 	index := table.hashFunction(key) % cap(table.xs)
 	for i := index; table.xs[i] != nil; i = (i + 1) % cap(table.xs) {
 		entry := table.xs[i]
