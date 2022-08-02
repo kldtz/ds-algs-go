@@ -8,8 +8,9 @@ func NewStack[T any]() *Stack[T] {
 	return &Stack[T]{NewList[T]()}
 }
 
-func (stack *Stack[T]) Push(v T) {
+func (stack *Stack[T]) Push(v T) *Stack[T] {
 	stack.Prepend(v)
+	return stack
 }
 
 func (stack *Stack[T]) Peek() (T, bool) {

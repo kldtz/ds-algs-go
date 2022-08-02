@@ -26,7 +26,7 @@ func (list *List[T]) ToSlice() []T {
 	return slice
 }
 
-func (list *List[T]) Append(v T) {
+func (list *List[T]) Append(v T) *List[T] {
 	node := &Node[T]{value: v}
 	if list.head == nil {
 		list.head = node
@@ -36,9 +36,10 @@ func (list *List[T]) Append(v T) {
 		list.tail = node
 	}
 	list.len += 1
+	return list
 }
 
-func (list *List[T]) Prepend(v T) {
+func (list *List[T]) Prepend(v T) *List[T] {
 	node := &Node[T]{value: v}
 	if list.tail == nil {
 		list.head = node
@@ -48,6 +49,7 @@ func (list *List[T]) Prepend(v T) {
 		list.head = node
 	}
 	list.len += 1
+	return list
 }
 
 func findFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
