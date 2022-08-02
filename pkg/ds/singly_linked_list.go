@@ -64,6 +64,11 @@ func findFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
 	return nil, false
 }
 
+func Contains[T comparable](list *List[T], v T) bool {
+	_, found := findFirst(list, v)
+	return found
+}
+
 func (list *List[T]) RemoveFirst() (T, bool) {
 	if list.head == nil {
 		var zero T

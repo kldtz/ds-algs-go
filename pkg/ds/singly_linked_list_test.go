@@ -41,6 +41,18 @@ func TestFindFirstUnknown(t *testing.T) {
 	assert.False(t, succ)
 }
 
+func TestContains(t *testing.T) {
+	list := NewList[int]()
+	list.Append(1).Append(2).Append(3)
+	assert.True(t, Contains(list, 3))
+}
+
+func TestContainsUnknown(t *testing.T) {
+	list := NewList[int]()
+	list.Append(1).Append(2).Append(3)
+	assert.False(t, Contains(list, 4))
+}
+
 func TestRemoveFirst(t *testing.T) {
 	list := NewList[int]()
 	list.Append(3).Append(1).Append(2)
