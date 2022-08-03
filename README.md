@@ -2,7 +2,7 @@
 
 Teaching myself some Go while refreshing data structures and algorithms.
 
-## Data Structures
+## [Data Structures](pkg/ds/)
 
 * [Binary heap](pkg/ds/binary_heap.go), array-backed
 * [Hash table](pkg/ds/hash_table.go) with linear probing for collision resolution
@@ -10,7 +10,9 @@ Teaching myself some Go while refreshing data structures and algorithms.
   * [Stack](pkg/ds/stack.go)
   * [Queue](pkg/ds/queue.go)
 
-## Algorithms
+## [Algorithms](pkg/algs/)
+
+### Sorting
 
 * [Bubble sort](pkg/algs/bubble_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time, O(1) swaps in best case (sorted input), O(1) aux memory.
 * [Insertion sort](pkg/algs/insertion_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time and O(1) swaps in best case (sorted input), O(1) memory. 
