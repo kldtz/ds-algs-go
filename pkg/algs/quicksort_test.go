@@ -17,3 +17,9 @@ func TestIterativeQuicksort(t *testing.T) {
 	IterativeQuicksort(input)
 	assert.True(t, IsSorted(input))
 }
+
+func TestTailRecursiveQuicksort(t *testing.T) {
+	input := RandIntSlice(20)
+	TailRecursiveQuicksort(input)
+	assert.True(t, IsSorted(input))
+}
