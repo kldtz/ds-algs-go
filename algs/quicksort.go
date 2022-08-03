@@ -1,7 +1,7 @@
 package algs
 
 import (
-	"github.com/kldtz/ds-algs-go/pkg/ds"
+	"github.com/kldtz/ds-algs-go/ds"
 
 	"golang.org/x/exp/constraints"
 )
