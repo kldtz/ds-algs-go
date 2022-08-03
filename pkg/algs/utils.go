@@ -1,6 +1,10 @@
 package algs
 
-import "golang.org/x/exp/constraints"
+import (
+	"math/rand"
+
+	"golang.org/x/exp/constraints"
+)
 
 func Swap[T any](xs []T, i int, j int) {
 	xs[i], xs[j] = xs[j], xs[i]
@@ -13,4 +17,12 @@ func IsSorted[T constraints.Ordered](xs []T) bool {
 		}
 	}
 	return true
+}
+
+func RandIntSlice(len int) []int {
+	slice := make([]int, 0, len)
+	for i := 0; i < len; i += 1 {
+		slice = append(slice, rand.Intn(100))
+	}
+	return slice
 }
