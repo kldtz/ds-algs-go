@@ -1,6 +1,7 @@
-package algs
+package sorts
 
 import (
+	"github.com/kldtz/ds-algs-go/algs"
 	"github.com/kldtz/ds-algs-go/ds"
 
 	"golang.org/x/exp/constraints"
@@ -12,11 +13,11 @@ func lomutoPartition[T constraints.Ordered](xs []T, lo int, hi int) int {
 	// Loop invariant: all elements xs[:boundary] are smaller than the pivot
 	for i := lo; i < hi; i += 1 {
 		if xs[i] < pivot {
-			Swap(xs, i, boundary)
+			algs.Swap(xs, i, boundary)
 			boundary += 1
 		}
 	}
-	Swap(xs, boundary, hi)
+	algs.Swap(xs, boundary, hi)
 	return boundary
 }
 

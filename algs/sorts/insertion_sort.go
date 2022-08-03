@@ -1,4 +1,4 @@
-package algs
+package sorts
 
 import "golang.org/x/exp/constraints"
 

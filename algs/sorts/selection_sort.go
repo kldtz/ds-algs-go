@@ -1,6 +1,10 @@
-package algs
+package sorts
 
-import "golang.org/x/exp/constraints"
+import (
+	"github.com/kldtz/ds-algs-go/algs"
+
+	"golang.org/x/exp/constraints"
+)
 
 func SelectionSort[T constraints.Ordered](xs []T) {
 	for i := 0; i < len(xs)-1; i += 1 {
@@ -10,6 +14,6 @@ func SelectionSort[T constraints.Ordered](xs []T) {
 				minIdx = j
 			}
 		}
-		Swap(xs, i, minIdx)
+		algs.Swap(xs, i, minIdx)
 	}
 }
