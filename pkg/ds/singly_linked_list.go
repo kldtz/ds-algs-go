@@ -18,6 +18,10 @@ func (list *List[T]) Len() int {
 	return list.len
 }
 
+func (list *List[T]) IsEmpty() bool {
+	return list.len == 0
+}
+
 func (list *List[T]) ToSlice() []T {
 	slice := make([]T, list.len)
 	for cur, i := list.head, 0; cur != nil; cur, i = cur.next, i+1 {

@@ -17,4 +17,6 @@ Teaching myself some Go while refreshing data structures and algorithms.
 * [Bubble sort](pkg/algs/bubble_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time, O(1) swaps in best case (sorted input), O(1) aux memory.
 * [Insertion sort](pkg/algs/insertion_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time and O(1) swaps in best case (sorted input), O(1) memory. 
   * [Shellsort](pkg/algs/insertion_sort.go)
+* [Quicksort](pkg/algs/quicksort.go)
+  * [Iterative Quicksort](pkg/algs/quicksort.go)
 * [Selection sort](pkg/algs/selection_sort.go)
