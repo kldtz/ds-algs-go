@@ -26,3 +26,27 @@ func RandIntSlice(len int) []int {
 	}
 	return slice
 }
+
+// Panics on empty input.
+func Min[T any, K constraints.Ordered](xs []T, key func(x T) K) K {
+	min := key(xs[0])
+	for i := 1; i < len(xs); i += 1 {
+		x := key(xs[i])
+		if x < min {
+			min = x
+		}
+	}
+	return min
+}
+
+// Panics on empty input.
+func Max[T any, K constraints.Ordered](xs []T, key func(x T) K) K {
+	max := key(xs[0])
+	for i := 1; i < len(xs); i += 1 {
+		x := key(xs[i])
+		if x > max {
+			max = x
+		}
+	}
+	return max
+}
