@@ -14,6 +14,7 @@ func CountingSort[T any](xs []T, key func(x T) int) []T {
 	for i := 1; i < len(count); i += 1 {
 		count[i] += count[i-1]
 	}
+	// Write elements to new slice in sorted order
 	ys := make([]T, len(xs))
 	for i := len(xs) - 1; i >= 0; i -= 1 {
 		x := xs[i]
