@@ -12,3 +12,15 @@ func TestBubbleSort(t *testing.T) {
 	BubbleSort(input)
 	assert.True(t, algs.IsSorted(input))
 }
+
+func TestCocktailShakerSort(t *testing.T) {
+	input := algs.RandIntSlice(20)
+	CocktailShakerSort(input)
+	assert.True(t, algs.IsSorted(input))
+}
+
+func TestCombSort(t *testing.T) {
+	input := algs.RandIntSlice(20)
+	CombSort(input)
+	assert.True(t, algs.IsSorted(input))
+}

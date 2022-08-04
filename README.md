@@ -15,6 +15,8 @@ Teaching myself some Go while refreshing data structures and algorithms.
 ### [Sorting](algs/sorts/)
 
 * [Bubble sort](algs/sorts/bubble_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time, O(1) swaps in best case (sorted input), O(1) aux memory.
+  * [Cocktail shaker sort](algs/sorts/bubble_sort.go): slight improvement by moving small elements from the end to the beginning faster in back passes.
+  * [Comb sort](algs/sorts/bubble_sort.go): improves over bubble sort by eliminating turtles, small values at the end of the list.
 * [Insertion sort](algs/sorts/insertion_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time and O(1) swaps in best case (sorted input), O(1) memory. 
   * [Shellsort](algs/sorts/insertion_sort.go)
 * [Quicksort](algs/sorts/quicksort.go)
