@@ -3,11 +3,12 @@ package ds
 import (
 	"testing"
 
+	"github.com/kldtz/ds-algs-go/algs"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestHeap(t *testing.T) {
-	heap := NewMaxHeap[int]()
+	heap := NewMaxHeap(make([]int, 0))
 	heap.insert(3).insert(2).insert(4).insert(1).insert(5)
 
 	assert.Equal(t, 5, heap.Size())
@@ -25,4 +26,10 @@ func TestHeap(t *testing.T) {
 	assert.False(t, succ)
 	_, succ = heap.extract_extreme()
 	assert.False(t, succ)
+}
+
+func TestHeapsort(t *testing.T) {
+	input := algs.RandIntSlice(20)
+	Heapsort(input)
+	assert.True(t, algs.IsSorted(input))
 }

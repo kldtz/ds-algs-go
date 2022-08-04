@@ -1,6 +1,7 @@
 package ds
 
 import (
+	"github.com/kldtz/ds-algs-go/algs"
 	"golang.org/x/exp/constraints"
 )
 
@@ -10,14 +11,18 @@ type BinaryHeap[T constraints.Ordered] struct {
 	cmp  func(a T, b T) bool
 }
 
-func NewMaxHeap[T constraints.Ordered]() *BinaryHeap[T] {
-	return &BinaryHeap[T]{
-		xs:   make([]T, 0),
-		size: 0,
+func NewMaxHeap[T constraints.Ordered](xs []T) *BinaryHeap[T] {
+	heap := &BinaryHeap[T]{
+		xs:   xs,
+		size: len(xs),
 		cmp: func(a T, b T) bool {
 			return a > b
 		},
 	}
+	for i := heap.size >> 1; i >= 0; i -= 1 {
+		heap.heapify(i)
+	}
+	return heap
 }
 
 func swap[T any](xs []T, i int, j int) {
@@ -34,6 +39,10 @@ func leftChild(i int) int {
 
 func rightChild(i int) int {
 	return (i + 1) << 1
+}
+
+func (heap *BinaryHeap[T]) IsEmpty() bool {
+	return heap.size == 0
 }
 
 func (heap *BinaryHeap[T]) Size() int {
@@ -87,4 +96,13 @@ func (heap *BinaryHeap[T]) insert(v T) *BinaryHeap[T] {
 	}
 	heap.size += 1
 	return heap
+}
+
+func Heapsort[T constraints.Ordered](xs []T) {
+	heap := NewMaxHeap(xs)
+	for !heap.IsEmpty() {
+		algs.Swap(heap.xs, 0, heap.size-1)
+		heap.size -= 1
+		heap.heapify(0)
+	}
 }
