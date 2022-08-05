@@ -21,6 +21,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 * [Heapsort](ds/binary_heap.go)
 * [Insertion sort](algs/sorts/insertion_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time and O(1) swaps in best case (sorted input), O(1) memory. 
   * [Shellsort](algs/sorts/insertion_sort.go)
+* [Merge sort](algs/sorts/merge_sort.go)
 * [Quicksort](algs/sorts/quicksort.go)
   * [Iterative quicksort](algs/sorts/quicksort.go)
   * [Tail-recursive quicksort](algs/sorts/quicksort.go)
