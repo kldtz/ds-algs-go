@@ -28,6 +28,11 @@ Teaching myself some Go while refreshing data structures and algorithms.
   * [Tail-recursive quicksort](algs/sorting/quicksort.go)
 * [Selection sort](algs/sorting/selection_sort.go)
 
+
+### String
+
+* [Longest common substring](algs/string/lcs.go)
+
 ---
 
 Ukkonen, E. (1995). On-line construction of suffix trees. Algorithmica, 14(3), 249-260.
