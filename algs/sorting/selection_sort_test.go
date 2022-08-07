@@ -1,4 +1,4 @@
-package sorts
+package sorting
 
 import (
 	"testing"

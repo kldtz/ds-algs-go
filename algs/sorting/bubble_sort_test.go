@@ -1,27 +1,26 @@
-package sorts
+package sorting
 
 import (
 	"testing"
 
 	"github.com/kldtz/ds-algs-go/algs"
-
 	"github.com/stretchr/testify/assert"
 )
 
-func TestQuicksort(t *testing.T) {
+func TestBubbleSort(t *testing.T) {
 	input := algs.RandIntSlice(20)
-	Quicksort(input)
+	BubbleSort(input)
 	assert.True(t, algs.IsSorted(input))
 }
 
-func TestIterativeQuicksort(t *testing.T) {
+func TestCocktailShakerSort(t *testing.T) {
 	input := algs.RandIntSlice(20)
-	IterativeQuicksort(input)
+	CocktailShakerSort(input)
 	assert.True(t, algs.IsSorted(input))
 }
 
-func TestTailRecursiveQuicksort(t *testing.T) {
+func TestCombSort(t *testing.T) {
 	input := algs.RandIntSlice(20)
-	TailRecursiveQuicksort(input)
+	CombSort(input)
 	assert.True(t, algs.IsSorted(input))
 }

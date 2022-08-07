@@ -1,4 +1,4 @@
-package sorts
+package sorting
 
 import (
 	"sort"
@@ -8,9 +8,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestMergeSort(t *testing.T) {
+func TestCountingSort(t *testing.T) {
 	input := algs.RandIntSlice(20)
-	actual := MergeSort(input)
+	actual := CountingSort(input, func(x int) int {
+		return x
+	})
 	sort.Ints(input)
 	assert.Equal(t, input, actual)
 }

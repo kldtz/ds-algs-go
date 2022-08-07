@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-type Transition func(char rune) *state
-type HasTransition func(char rune) bool
+type transition func(char rune) *state
+type hasTransition func(char rune) bool
 
 type state struct {
 	id          int
@@ -15,8 +15,8 @@ type state struct {
 	transitions map[rune]*state
 	suffixLink  *state
 	// Somewhat non-standard, but avoids having to implement an interface with getters and setters
-	transition    Transition
-	hasTransition HasTransition
+	transition    transition
+	hasTransition hasTransition
 }
 
 func newState(id int, start int, end int) *state {

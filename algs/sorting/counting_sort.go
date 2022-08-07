@@ -1,4 +1,4 @@
-package sorts
+package sorting
 
 import "github.com/kldtz/ds-algs-go/algs"
 
