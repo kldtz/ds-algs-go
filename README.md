@@ -9,6 +9,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 * [Singly linked list](ds/singly_linked_list.go) with head and tail pointers
   * [Stack](ds/stack.go)
   * [Queue](ds/queue.go)
+* [Suffix tree](ds/suffix_tree.go) constructed in linear time following Ukkonen (1995)
 
 ## [Algorithms](algs/)
 
@@ -26,3 +27,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
   * [Iterative quicksort](algs/sorts/quicksort.go)
   * [Tail-recursive quicksort](algs/sorts/quicksort.go)
 * [Selection sort](algs/sorts/selection_sort.go)
+
+---
+
+Ukkonen, E. (1995). On-line construction of suffix trees. Algorithmica, 14(3), 249-260.

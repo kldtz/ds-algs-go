@@ -1,95 +1,70 @@
 package ds
 
-type state interface {
-	Start() int
-	SetStart(start int)
-	End() int
-	Id() int
-	Transition(char rune) state
-	HasTransition(char rune) bool
-	Transitions() *map[rune]state
-	PutTransition(char rune, s state)
-	SuffixLink() state
-	SetSuffixLink(s state)
-}
+import (
+	"fmt"
+	"strings"
+)
 
-type mainState struct {
+type Transition func(char rune) *state
+type HasTransition func(char rune) bool
+
+type state struct {
 	id          int
 	start       int
 	end         int
-	transitions map[rune]state
-	suffixLink  state
+	transitions map[rune]*state
+	suffixLink  *state
+	// Somewhat non-standard, but avoids having to implement an interface with getters and setters
+	transition    Transition
+	hasTransition HasTransition
 }
 
-func (state *mainState) Start() int {
-	return state.start
+func newState(id int, start int, end int) *state {
+	var s *state
+	s = &state{
+		id:          id,
+		start:       start,
+		end:         end,
+		transitions: map[rune]*state{},
+		transition: func(char rune) *state {
+			return s.transitions[char]
+		},
+		hasTransition: func(char rune) bool {
+			_, ok := s.transitions[char]
+			return ok
+		},
+	}
+	return s
 }
 
-func (state *mainState) SetStart(start int) {
-	state.start = start
-}
-
-func (state *mainState) End() int {
-	return state.end
-}
-
-func (state *mainState) Id() int {
-	return state.id
-}
-
-func (state *mainState) Transition(char rune) state {
-	return state.transitions[char]
-}
-
-func (state *mainState) HasTransition(char rune) bool {
-	_, ok := state.transitions[char]
-	return ok
-}
-
-func (state *mainState) Transitions() *map[rune]state {
-	return &state.transitions
-}
-
-func (state *mainState) PutTransition(char rune, s state) {
-	state.transitions[char] = s
-}
-
-func (state *mainState) SuffixLink() state {
-	return state.suffixLink
-}
-
-func (state *mainState) SetSuffixLink(s state) {
-	state.suffixLink = s
-}
-
-type auxState struct {
-	*mainState
-}
-
-func (aux *auxState) Transition(char rune) state {
-	return aux.transitions['*']
-}
-
-func (aux *auxState) HasTransition(char rune) bool {
-	return true
+func newAuxState(root *state) *state {
+	var s *state
+	s = &state{
+		transitions: map[rune]*state{'*': root},
+		transition: func(char rune) *state {
+			return root
+		},
+		hasTransition: func(char rune) bool {
+			return true
+		},
+	}
+	return s
 }
 
 type SuffixTree struct {
 	text    []rune
-	root    state
+	root    *state
 	stateId int
 }
 
 func NewSuffixTree(text string) *SuffixTree {
 	tree := &SuffixTree{
 		// 1-based indices
-		text:    []rune("*" + text + "#"),
-		stateId: 0,
+		text:    []rune("*" + text + string(byte(0))),
+		stateId: 1,
 	}
 	tree.root = tree.newState(0, 0)
-	tree.root.SetSuffixLink(&auxState{
-		mainState: &mainState{transitions: map[rune]state{'*': tree.root}, id: -1},
-	})
+	tree.root.suffixLink = newAuxState(tree.root)
 	s, k := tree.root, 1
 	for i := 1; i < len(tree.text); i += 1 {
 		s, k = tree.update(s, k, i)
@@ -97,15 +72,15 @@ func NewSuffixTree(text string) *SuffixTree {
 	return tree
 }
 
-func (tree *SuffixTree) newState(start int, end int) *mainState {
-	s := &mainState{start: start, end: end, id: tree.stateId, transitions: map[rune]state{}}
+func (tree *SuffixTree) newState(start int, end int) *state {
+	s := newState(tree.stateId, start, end)
 	tree.stateId += 1
 	return s
 }
 
 // Updates the tree with the character at index i, starting from the
 // active point (s, (k, i-1)).
-func (tree *SuffixTree) update(s state, k int, i int) (state, int) {
+func (tree *SuffixTree) update(s *state, k int, i int) (*state, int) {
 	oldr := tree.root
 	t := tree.text[i]
 	for {
@@ -114,19 +89,19 @@ func (tree *SuffixTree) update(s state, k int, i int) (state, int) {
 		// Check if transition already exists, split if necessary
 		endPoint, r := tree.testAndSplit(s, k, i-1, t)
 		// Link up previous state r if it isn't the root
-		if oldr.Id() != tree.root.Id() {
-			oldr.SetSuffixLink(r)
+		if oldr.id != tree.root.id {
+			oldr.suffixLink = r
 		}
 		// If the transition already exists, we're done
 		if endPoint {
 			break
 		}
 		// Add transition for current character t
-		r.PutTransition(t, tree.newState(i, len(tree.text)-1))
+		r.transitions[t] = tree.newState(i, len(tree.text)-1)
 		oldr = r
 		// Follow suffix link
-		if s.SuffixLink() != nil {
-			s = s.SuffixLink()
+		if s.suffixLink != nil {
+			s = s.suffixLink
 		} else {
 			break
 		}
@@ -138,14 +113,14 @@ func (tree *SuffixTree) update(s state, k int, i int) (state, int) {
 // that is, the closest explicit ancestor of r. If p < k, state s is
 // already an explicit state and thus canonical, otherwise we follow the
 // transitions to states s', as long as k' <= p.
-func (tree *SuffixTree) canonize(s state, k int, p int) (state, int) {
+func (tree *SuffixTree) canonize(s *state, k int, p int) (*state, int) {
 	for {
 		if p < k {
 			break
 		}
-		ss := s.Transition(tree.text[k])
-		if ss.End()-ss.Start() <= p-k {
-			k += ss.End() - ss.Start() + 1
+		ss := s.transition(tree.text[k])
+		if ss.end-ss.start <= p-k {
+			k += ss.end - ss.start + 1
 			s = ss
 		} else {
 			break
@@ -167,24 +142,24 @@ func (tree *SuffixTree) canonize(s state, k int, p int) (state, int) {
 // Returns existing state s or new state r (1b) and whether it is the
 // endpoint, that is, a state that already has a transition t (explicitly
 // or implicitly).
-func (tree *SuffixTree) testAndSplit(s state, k int, p int, t rune) (bool, state) {
+func (tree *SuffixTree) testAndSplit(s *state, k int, p int, t rune) (bool, *state) {
 	if k <= p {
 		// (1) Active point is an implicit state
-		ss := s.Transition(tree.text[k])
-		if t == tree.text[ss.Start()+p-k+1] {
+		ss := s.transition(tree.text[k])
+		if t == tree.text[ss.start+p-k+1] {
 			// (a) Next char on existing path matches current char t
 			return true, s
 		} else {
 			// (b) Next char on existing path does not match t, need to split
-			r := tree.newState(ss.Start(), ss.Start()+p-k)
-			s.PutTransition(tree.text[ss.Start()], r)
-			ss.SetStart(ss.Start() + p - k + 1)
-			r.PutTransition(tree.text[ss.Start()], ss)
+			r := tree.newState(ss.start, ss.start+p-k)
+			s.transitions[tree.text[ss.start]] = r
+			ss.start = ss.start + p - k + 1
+			r.transitions[tree.text[ss.start]] = ss
 			return false, r
 		}
 	} else {
 		// (2) Active point is an explicit state: (s, (k, p)) = (r, ε)
-		if s.HasTransition(t) {
+		if s.hasTransition(t) {
 			// (a) Transition for t already exists
 			return true, s
 		} else {
@@ -195,7 +170,7 @@ func (tree *SuffixTree) testAndSplit(s state, k int, p int, t rune) (bool, state
 }
 
 type suffixConfig struct {
-	state state
+	state *state
 	runes []rune
 }
 
@@ -206,15 +181,15 @@ func (tree *SuffixTree) Suffixes() []string {
 	results := make([]string, 0, len(tree.text))
 	for !stack.IsEmpty() {
 		sc, _ := stack.Pop()
-		if sc.state.Id() > 0 {
-			sc.runes = append(sc.runes, tree.text[sc.state.Start():sc.state.End()+1]...)
+		if sc.state.id > 1 {
+			sc.runes = append(sc.runes, tree.text[sc.state.start:sc.state.end+1]...)
 		}
-		if len(*sc.state.Transitions()) == 0 {
+		if len(sc.state.transitions) == 0 {
 			// Leaf node
 			results = append(results, string(sc.runes[:len(sc.runes)-1]))
 		} else {
 			// Non-leaf node
-			for _, state := range *sc.state.Transitions() {
+			for _, state := range sc.state.transitions {
 				new_runes := make([]rune, len(sc.runes))
 				copy(new_runes, sc.runes)
 				stack.Push(suffixConfig{state: state, runes: new_runes})
@@ -222,4 +197,53 @@ func (tree *SuffixTree) Suffixes() []string {
 		}
 	}
 	return results
+}
+
+func (tree *SuffixTree) IsSubstring(pattern string) bool {
+	state := tree.root
+	start, end := 0, -1
+	for _, char := range pattern {
+		if start <= end {
+			if tree.text[start] == char {
+				start += 1
+			} else {
+				return false
+			}
+		} else if state.hasTransition(char) {
+			state = state.transition(char)
+			start, end = state.start+1, state.end
+		} else {
+			return false
+		}
+	}
+	return true
+}
+
+func (tree *SuffixTree) IsSuffix(pattern string) bool {
+	return tree.IsSubstring(pattern + string(byte(0)))
+}
+
+func (tree *SuffixTree) Dot() string {
+	lines := NewList[string]()
+	lines.
+		Append("digraph SuffixTree {").Append("graph [bgcolor=transparent];").
+		Append("node [shape=circle, fixedsize=true, width=0.5];").
+		Append("rankdir=LR;")
+	tree.dot(tree.root.suffixLink, lines)
+	lines.Append("}")
+	return strings.Join(lines.ToSlice(), "\n")
+}
+
+func (tree *SuffixTree) dot(state *state, lines *List[string]) {
+	if state.suffixLink != nil {
+		lines.Append(fmt.Sprintf("\t%d -> %d [color=steelblue];", state.id, state.suffixLink.id))
+	}
+	for _, child := range state.transitions {
+		text := string(tree.text[child.start : child.end+1])
+		text = strings.Replace(text, string(byte(0)), "#", 1)
+		lines.Append(fmt.Sprintf(
+			"\t%d -> %d [label=\"%d,%d: %s\"];",
+			state.id, child.id, child.start, child.end, text))
+		tree.dot(child, lines)
+	}
 }
