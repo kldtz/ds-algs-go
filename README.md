@@ -29,7 +29,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 * [Selection sort](algs/sorting/selection_sort.go)
 
 
-### String
+### [String](algs/string/)
 
 * [Longest common substring](algs/string/lcs.go)
 
