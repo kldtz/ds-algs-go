@@ -66,11 +66,11 @@ type auxState struct {
 	*mainState
 }
 
-func (aux *auxState) transition(char rune) state {
+func (aux *auxState) Transition(char rune) state {
 	return aux.transitions['*']
 }
 
-func (aux *auxState) hasTransition(char rune) bool {
+func (aux *auxState) HasTransition(char rune) bool {
 	return true
 }
 
@@ -83,12 +83,12 @@ type SuffixTree struct {
 func NewSuffixTree(text string) *SuffixTree {
 	tree := &SuffixTree{
 		// 1-based indices
-		text:    []rune("*" + text + string(byte(0))),
+		text:    []rune("*" + text + "#"),
 		stateId: 0,
 	}
 	tree.root = tree.newState(0, 0)
 	tree.root.SetSuffixLink(&auxState{
-		mainState: &mainState{transitions: map[rune]state{'*': tree.root}},
+		mainState: &mainState{transitions: map[rune]state{'*': tree.root}, id: -1},
 	})
 	s, k := tree.root, 1
 	for i := 1; i < len(tree.text); i += 1 {
@@ -110,11 +110,11 @@ func (tree *SuffixTree) update(s state, k int, i int) (state, int) {
 	t := tree.text[i]
 	for {
 		// Get canonical reference pair for active point
-		s, k := tree.canonize(s, k, i-1)
+		s, k = tree.canonize(s, k, i-1)
 		// Check if transition already exists, split if necessary
 		endPoint, r := tree.testAndSplit(s, k, i-1, t)
 		// Link up previous state r if it isn't the root
-		if &oldr != &tree.root {
+		if oldr.Id() != tree.root.Id() {
 			oldr.SetSuffixLink(r)
 		}
 		// If the transition already exists, we're done
@@ -206,7 +206,7 @@ func (tree *SuffixTree) Suffixes() []string {
 	results := make([]string, 0, len(tree.text))
 	for !stack.IsEmpty() {
 		sc, _ := stack.Pop()
-		if sc.state.Id() != 0 {
+		if sc.state.Id() > 0 {
 			sc.runes = append(sc.runes, tree.text[sc.state.Start():sc.state.End()+1]...)
 		}
 		if len(*sc.state.Transitions()) == 0 {
@@ -215,7 +215,7 @@ func (tree *SuffixTree) Suffixes() []string {
 		} else {
 			// Non-leaf node
 			for _, state := range *sc.state.Transitions() {
-				new_runes := make([]rune, 0, len(sc.runes))
+				new_runes := make([]rune, len(sc.runes))
 				copy(new_runes, sc.runes)
 				stack.Push(suffixConfig{state: state, runes: new_runes})
 			}

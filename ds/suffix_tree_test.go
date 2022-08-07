@@ -19,7 +19,9 @@ func TestSuffixes(t *testing.T) {
 		"banane",
 	}
 	actual := tree.Suffixes()
-	sort.Strings(actual)
+	sort.Slice(actual, func(i, j int) bool {
+		return len(actual[i]) < len(actual[j])
+	})
 
-	assert.Equal(t, expected, tree.Suffixes())
+	assert.Equal(t, expected, actual)
 }
