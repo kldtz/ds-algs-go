@@ -1,6 +1,6 @@
 package ds
 
-func djb2_hash(s string) int {
+func djb2Hash(s string) int {
 	hash := 5481
 	for _, c := range s {
 		hash = (hash << 5) + hash + int(c)
@@ -24,7 +24,7 @@ func NewHashTable[T any]() *HashTable[string, T] {
 	return &HashTable[string, T]{
 		size:         0,
 		loadFactor:   0.75,
-		hashFunction: djb2_hash,
+		hashFunction: djb2Hash,
 		xs:           make([]*HashTableEntry[string, T], 16),
 	}
 }
