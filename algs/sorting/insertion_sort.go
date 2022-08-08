@@ -1,6 +1,8 @@
 package sorting
 
-import "golang.org/x/exp/constraints"
+import (
+	"golang.org/x/exp/constraints"
+)
 
 func gappedInsertionSort[T constraints.Ordered](xs []T, gap int) {
 	for i := gap; i < len(xs); i += 1 {
@@ -24,4 +26,28 @@ func Shellsort[T constraints.Ordered](xs []T) {
 	for _, gap := range gaps {
 		gappedInsertionSort(xs, gap)
 	}
+}
+
+func StackBasedInsertionSort[T constraints.Ordered](xs []T) []T {
+	asc := make([]T, 0, len(xs))
+	desc := make([]T, 0, len(xs))
+	for _, x := range xs {
+		if len(asc) == 0 || x > asc[len(asc)-1] {
+			for len(desc) != 0 && x > desc[len(desc)-1] {
+				asc = append(asc, desc[len(desc)-1])
+				desc = desc[:len(desc)-1]
+			}
+			desc = append(desc, x)
+		} else {
+			for len(asc) != 0 && x < asc[len(asc)-1] {
+				desc = append(desc, asc[len(asc)-1])
+				asc = asc[:len(asc)-1]
+			}
+			asc = append(asc, x)
+		}
+	}
+	for i := len(desc) - 1; i >= 0; i -= 1 {
+		asc = append(asc, desc[i])
+	}
+	return asc
 }
