@@ -1,12 +1,12 @@
 package ds
 
-type Node[T any] struct {
+type element[T any] struct {
 	value T
-	next  *Node[T]
+	next  *element[T]
 }
 
 type List[T any] struct {
-	head, tail *Node[T]
+	head, tail *element[T]
 	len        int
 }
 
@@ -31,7 +31,7 @@ func (list *List[T]) ToSlice() []T {
 }
 
 func (list *List[T]) Append(v T) *List[T] {
-	node := &Node[T]{value: v}
+	node := &element[T]{value: v}
 	if list.head == nil {
 		list.head = node
 		list.tail = node
@@ -44,7 +44,7 @@ func (list *List[T]) Append(v T) *List[T] {
 }
 
 func (list *List[T]) Prepend(v T) *List[T] {
-	node := &Node[T]{value: v}
+	node := &element[T]{value: v}
 	if list.tail == nil {
 		list.head = node
 		list.tail = node
@@ -56,7 +56,7 @@ func (list *List[T]) Prepend(v T) *List[T] {
 	return list
 }
 
-func findFirst[T comparable](list *List[T], v T) (*Node[T], bool) {
+func findFirst[T comparable](list *List[T], v T) (*element[T], bool) {
 	if list.head == nil {
 		return nil, false
 	}
@@ -88,7 +88,7 @@ func (list *List[T]) RemoveFirst() (T, bool) {
 	return removed, true
 }
 
-func (list *List[T]) Delete(n *Node[T]) bool {
+func (list *List[T]) Delete(n *element[T]) bool {
 	if list.head == nil {
 		return false
 	}
@@ -115,7 +115,7 @@ func (list *List[T]) Iterator() ListIterator[T] {
 }
 
 type ListIterator[T any] struct {
-	cur *Node[T]
+	cur *element[T]
 }
 
 func (it *ListIterator[T]) HasNext() bool {
