@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInorder(t *testing.T) {
+func TestLevelOrder(t *testing.T) {
 	NIL := &BinaryNode[int]{}
 	tree := &BinaryNode[int]{value: 1,
 		left: &BinaryNode[int]{value: 2,
