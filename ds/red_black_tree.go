@@ -11,6 +11,14 @@ type node[K constraints.Ordered, V any] struct {
 	right  *node[K, V]
 }
 
+func (n *node[K, V]) Left() Node {
+	return n.left
+}
+
+func (n *node[K, V]) Right() Node {
+	return n.right
+}
+
 type RedBlackTree[K constraints.Ordered, V any] struct {
 	root *node[K, V]
 	len  int

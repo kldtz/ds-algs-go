@@ -43,7 +43,7 @@ func (it *Inorder) Next() Node {
 		cur := it.cur
 		it.stack.Push(cur)
 		it.cur = cur.Left()
-		return cur
+		return it.Next()
 	} else {
 		cur, _ := it.stack.Pop()
 		it.cur = cur.Right()
@@ -52,30 +52,27 @@ func (it *Inorder) Next() Node {
 }
 
 type Preorder struct {
-	cur   Node
 	stack *Stack[Node]
 	NIL   Node
 }
 
 func NewPreorder(root Node, sentinel Node) *Preorder {
-	return &Preorder{cur: root, stack: NewStack[Node](), NIL: sentinel}
+	return &Preorder{stack: NewStack[Node]().Push(root), NIL: sentinel}
 }
 
 func (it *Preorder) HasNext() bool {
-	return !it.stack.IsEmpty() || it.cur != it.NIL
+	return !it.stack.IsEmpty()
 }
 
 func (it *Preorder) Next() Node {
-	if it.cur != it.NIL {
-		cur := it.cur
-		it.stack.Push(cur)
-		it.cur = cur.Left()
-		return cur
-	} else {
-		cur, _ := it.stack.Pop()
-		it.cur = cur.Right()
-		return cur
+	cur, _ := it.stack.Pop()
+	if cur.Right() != it.NIL {
+		it.stack.Push(cur.Right())
 	}
+	if cur.Left() != it.NIL {
+		it.stack.Push(cur.Left())
+	}
+	return cur
 }
 
 type Postorder struct {
@@ -95,22 +92,19 @@ func (it *Postorder) HasNext() bool {
 
 func (it *Postorder) Next() Node {
 	if it.cur != it.NIL {
-		cur := it.cur
-		it.stack.Push(cur)
-		it.cur = cur.Left()
-		return cur
+		it.stack.Push(it.cur)
+		it.cur = it.cur.Left()
 	} else {
 		cur, _ := it.stack.Peek()
 		if cur.Right() == it.NIL || cur.Right() == it.prev {
-			cur, _ = it.stack.Pop()
+			it.stack.Pop()
 			it.prev = cur
-			it.cur = it.NIL
 			return cur
 		} else {
-			it.cur = it.cur.Right()
-			return it.Next()
+			it.cur = cur.Right()
 		}
 	}
+	return it.Next()
 }
 
 type LevelOrder struct {
