@@ -46,6 +46,7 @@ func (tree *RBTree[K, V]) Insert(key K, value V) *RBTree[K, V] {
 			x = x.left
 		} else if key == y.Key {
 			x.Value = value
+			return tree
 		} else {
 			x = x.right
 		}
@@ -96,7 +97,7 @@ func (tree *RBTree[K, V]) fixupInsert(z *RBNode[K, V]) {
 			if y.red {
 				// color parent and sibling black
 				z.parent.red = false
-				z.red = false
+				y.red = false
 				// color grandparent red
 				z.parent.parent.red = true
 				// continue with grandparent as z
@@ -179,4 +180,23 @@ func (it *LevelOrder[K, V]) Next() RBNode[K, V] {
 func (tree *RBTree[K, V]) Levelorder() *LevelOrder[K, V] {
 	it := ds.NewLevelOrder(tree.root, tree.NIL)
 	return &LevelOrder[K, V]{inner: it}
+}
+
+type Inorder[K constraints.Ordered, V any] struct {
+	inner *ds.Inorder
+}
+
+func (it *Inorder[K, V]) HasNext() bool {
+	return it.inner.HasNext()
+}
+
+func (it *Inorder[K, V]) Next() RBNode[K, V] {
+	node := it.inner.Next()
+	rbNode := node.(*RBNode[K, V])
+	return *rbNode
+}
+
+func (tree *RBTree[K, V]) Inorder() *Inorder[K, V] {
+	it := ds.NewInorder(tree.root, tree.NIL)
+	return &Inorder[K, V]{inner: it}
 }

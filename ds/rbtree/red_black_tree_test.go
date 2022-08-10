@@ -48,3 +48,89 @@ func TestInsertionCase1aLeft(t *testing.T) {
 	assert.Equal(t, []int{3, 2, 4, 1}, keys)
 	assert.Equal(t, []bool{false, false, false, true}, colors)
 }
+
+func TestInsertionCase1b(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(2, "").
+		Insert(1, "").
+		Insert(3, "").
+		Insert(4, "")
+
+	it := tree.Levelorder()
+	keys, colors := make([]int, 0, 4), make([]bool, 0, 4)
+	for it.HasNext() {
+		node := it.Next()
+		keys = append(keys, node.Key)
+		colors = append(colors, node.red)
+	}
+	assert.Equal(t, []int{2, 1, 3, 4}, keys)
+	assert.Equal(t, []bool{false, false, false, true}, colors)
+}
+
+func TestInsertionCase3a(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(3, "").
+		Insert(2, "").
+		Insert(1, "")
+
+	it := tree.Levelorder()
+	keys, colors := make([]int, 0, 4), make([]bool, 0, 4)
+	for it.HasNext() {
+		node := it.Next()
+		keys = append(keys, node.Key)
+		colors = append(colors, node.red)
+	}
+	assert.Equal(t, []int{2, 1, 3}, keys)
+	assert.Equal(t, []bool{false, true, true}, colors)
+}
+
+func TestInsertionCase3b(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(1, "").
+		Insert(2, "").
+		Insert(3, "")
+
+	it := tree.Levelorder()
+	keys, colors := make([]int, 0, 4), make([]bool, 0, 4)
+	for it.HasNext() {
+		node := it.Next()
+		keys = append(keys, node.Key)
+		colors = append(colors, node.red)
+	}
+	assert.Equal(t, []int{2, 1, 3}, keys)
+	assert.Equal(t, []bool{false, true, true}, colors)
+}
+
+func TestInsertionCase2And3(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(3, "").
+		Insert(1, "").
+		Insert(2, "")
+
+	it := tree.Levelorder()
+	keys, colors := make([]int, 0, 4), make([]bool, 0, 4)
+	for it.HasNext() {
+		node := it.Next()
+		keys = append(keys, node.Key)
+		colors = append(colors, node.red)
+	}
+	assert.Equal(t, []int{2, 1, 3}, keys)
+	assert.Equal(t, []bool{false, true, true}, colors)
+}
+
+func TestInsertionCase2bAnd3b(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(1, "").
+		Insert(3, "").
+		Insert(2, "")
+
+	it := tree.Levelorder()
+	keys, colors := make([]int, 0, 4), make([]bool, 0, 4)
+	for it.HasNext() {
+		node := it.Next()
+		keys = append(keys, node.Key)
+		colors = append(colors, node.red)
+	}
+	assert.Equal(t, []int{2, 1, 3}, keys)
+	assert.Equal(t, []bool{false, true, true}, colors)
+}
