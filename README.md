@@ -6,7 +6,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 
 * [Binary heap](ds/binary_heap.go), array-backed
 * [Binary tree](ds/binary_tree.go)
-  * [Red-black tree](ds/red_black_tree.go)
+  * [Red-black tree](ds/rbtree/red_black_tree.go)
 * [Hash table](ds/hash_table.go) with linear probing for collision resolution
 * [Singly linked list](ds/singly_linked_list.go) with head and tail pointers
   * [Stack](ds/stack.go)

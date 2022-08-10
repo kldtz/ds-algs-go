@@ -1,55 +1,69 @@
-package ds
+package rbtree
 
-import "golang.org/x/exp/constraints"
+import (
+	"github.com/kldtz/ds-algs-go/ds"
+	"golang.org/x/exp/constraints"
+)
 
-type node[K constraints.Ordered, V any] struct {
-	key    K
-	value  V
+type RBNode[K constraints.Ordered, V any] struct {
+	Key    K
+	Value  V
 	red    bool
-	parent *node[K, V]
-	left   *node[K, V]
-	right  *node[K, V]
+	parent *RBNode[K, V]
+	left   *RBNode[K, V]
+	right  *RBNode[K, V]
 }
 
-func (n *node[K, V]) Left() Node {
+func (n *RBNode[K, V]) Left() ds.Node {
 	return n.left
 }
 
-func (n *node[K, V]) Right() Node {
+func (n *RBNode[K, V]) Right() ds.Node {
 	return n.right
 }
 
-type RedBlackTree[K constraints.Ordered, V any] struct {
-	root *node[K, V]
+type RBTree[K constraints.Ordered, V any] struct {
+	root *RBNode[K, V]
 	len  int
-	NIL  *node[K, V] // sentinel: &node[K, V]{red: false}
+	NIL  *RBNode[K, V] // sentinel: &RBNode[K, V]{red: false}
 }
 
-func (tree *RedBlackTree[K, V]) Insert(key K, value V) {
+func NewRBTree[K constraints.Ordered, V any]() *RBTree[K, V] {
+	NIL := &RBNode[K, V]{red: false}
+	return &RBTree[K, V]{
+		root: NIL,
+		len:  0,
+		NIL:  NIL,
+	}
+}
+
+func (tree *RBTree[K, V]) Insert(key K, value V) *RBTree[K, V] {
 	y := tree.NIL
 	x := tree.root
 	for x != tree.NIL {
 		y = x
-		if key < y.key {
+		if key < y.Key {
 			x = x.left
-		} else if key == y.key {
-			x.value = value
+		} else if key == y.Key {
+			x.Value = value
 		} else {
 			x = x.right
 		}
 	}
-	z := &node[K, V]{key: key, value: value, red: true, parent: y, left: tree.NIL, right: tree.NIL}
+	z := &RBNode[K, V]{Key: key, Value: value, red: true, parent: y, left: tree.NIL, right: tree.NIL}
 	if y == tree.NIL {
 		tree.root = z
-	} else if key < y.key {
+	} else if key < y.Key {
 		y.left = z
 	} else {
 		y.right = z
 	}
 	tree.fixupInsert(z)
+	tree.len += 1
+	return tree
 }
 
-func (tree *RedBlackTree[K, V]) fixupInsert(z *node[K, V]) {
+func (tree *RBTree[K, V]) fixupInsert(z *RBNode[K, V]) {
 	// while z's parent is red
 	for z.parent.red {
 		// if the parent of z is a left child
@@ -107,7 +121,7 @@ func (tree *RedBlackTree[K, V]) fixupInsert(z *node[K, V]) {
 //    a   y     =>     x   c
 //       / \          / \
 //      b   c        a   b
-func (tree *RedBlackTree[K, V]) leftRotate(x *node[K, V]) {
+func (tree *RBTree[K, V]) leftRotate(x *RBNode[K, V]) {
 	y := x.right
 	x.right = y.left
 	if y.left != tree.NIL {
@@ -130,7 +144,7 @@ func (tree *RedBlackTree[K, V]) leftRotate(x *node[K, V]) {
 //    a   y     <=     x   c
 //       / \          / \
 //      b   c        a   b
-func (tree *RedBlackTree[K, V]) rightRotate(y *node[K, V]) {
+func (tree *RBTree[K, V]) rightRotate(y *RBNode[K, V]) {
 	x := y.left
 	y.left = x.right
 	if x.right != tree.NIL {
@@ -146,4 +160,23 @@ func (tree *RedBlackTree[K, V]) rightRotate(y *node[K, V]) {
 	}
 	x.right = y
 	y.parent = x
+}
+
+type LevelOrder[K constraints.Ordered, V any] struct {
+	inner *ds.LevelOrder
+}
+
+func (it *LevelOrder[K, V]) HasNext() bool {
+	return it.inner.HasNext()
+}
+
+func (it *LevelOrder[K, V]) Next() RBNode[K, V] {
+	node := it.inner.Next()
+	rbNode := node.(*RBNode[K, V])
+	return *rbNode
+}
+
+func (tree *RBTree[K, V]) Levelorder() *LevelOrder[K, V] {
+	it := ds.NewLevelOrder(tree.root, tree.NIL)
+	return &LevelOrder[K, V]{inner: it}
 }
