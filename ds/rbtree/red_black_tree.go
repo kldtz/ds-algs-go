@@ -178,6 +178,11 @@ func (tree *RBTree[K, V]) Find(key K) (V, bool) {
 	return zero, false
 }
 
+func (tree *RBTree[K, V]) Has(key K) bool {
+	_, ok := tree.Find(key)
+	return ok
+}
+
 type LevelOrder[K constraints.Ordered, V any] struct {
 	inner *ds.LevelOrder
 }
