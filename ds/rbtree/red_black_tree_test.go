@@ -134,3 +134,28 @@ func TestInsertionCase2bAnd3b(t *testing.T) {
 	assert.Equal(t, []int{2, 1, 3}, keys)
 	assert.Equal(t, []bool{false, true, true}, colors)
 }
+
+func TestFind(t *testing.T) {
+	tree := NewRBTree[int, string]()
+	tree.Insert(1, "one").
+		Insert(3, "three").
+		Insert(2, "two").
+		Insert(4, "four").
+		Insert(5, "five")
+
+	val, ok := tree.Find(1)
+	assert.True(t, ok)
+	assert.Equal(t, "one", val)
+	val, ok = tree.Find(2)
+	assert.True(t, ok)
+	assert.Equal(t, "two", val)
+	val, ok = tree.Find(3)
+	assert.True(t, ok)
+	assert.Equal(t, "three", val)
+	val, ok = tree.Find(4)
+	assert.True(t, ok)
+	assert.Equal(t, "four", val)
+
+	_, ok = tree.Find(6)
+	assert.False(t, ok)
+}

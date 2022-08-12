@@ -163,6 +163,21 @@ func (tree *RBTree[K, V]) rightRotate(y *RBNode[K, V]) {
 	y.parent = x
 }
 
+func (tree *RBTree[K, V]) Find(key K) (V, bool) {
+	node := tree.root
+	for node != tree.NIL {
+		if key < node.Key {
+			node = node.left
+		} else if key == node.Key {
+			return node.Value, true
+		} else {
+			node = node.right
+		}
+	}
+	var zero V
+	return zero, false
+}
+
 type LevelOrder[K constraints.Ordered, V any] struct {
 	inner *ds.LevelOrder
 }
