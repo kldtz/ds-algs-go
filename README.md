@@ -6,7 +6,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 
 * [Binary heap](ds/binary_heap.go), array-backed
 * [Binary tree](ds/binary_tree.go)
-  * [Red-black tree](ds/rbtree/red_black_tree.go)
+  * [Red-black tree](ds/rbtree/red_black_tree.go) following Cormen et al. (2009)
 * [Hash table](ds/hash_table.go) with linear probing for collision resolution
 * [Singly linked list](ds/singly_linked_list.go) with head and tail pointers
   * [Stack](ds/stack.go)
@@ -24,7 +24,7 @@ Teaching myself some Go while refreshing data structures and algorithms.
 * [Heapsort](ds/binary_heap.go)
 * [Insertion sort](algs/sorting/insertion_sort.go): O(n²) comparisons and swaps in worst and average case, O(n) time and O(1) swaps in best case (sorted input), O(1) memory. 
   * [Shellsort](algs/sorting/insertion_sort.go)
-  * [Stack-based insertion sort](algs/sorting/insertion_sort.go)
+  * [Stack-based insertion sort](algs/sorting/insertion_sort.go) following Ammar (1989)
 * [Merge sort](algs/sorting/merge_sort.go)
 * [Quicksort](algs/sorting/quicksort.go)
   * [Iterative quicksort](algs/sorting/quicksort.go)
@@ -38,4 +38,8 @@ Teaching myself some Go while refreshing data structures and algorithms.
 
 ---
 
-Ukkonen, E. (1995). On-line construction of suffix trees. Algorithmica, 14(3), 249-260.
+Ammar, R. A. (1989). Stack-based sorting algorithms. *Journal of Systems and Software*, 9(3), 225-239
+
+Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). Introduction to algorithms. MIT press.
+
+Ukkonen, E. (1995). On-line construction of suffix trees. *Algorithmica*, 14(3), 249-260.
